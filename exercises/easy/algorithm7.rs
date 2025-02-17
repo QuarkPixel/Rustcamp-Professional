@@ -3,6 +3,7 @@
 	This question requires you to use a stack to achieve a bracket match
 */
 
+fn main() {}
 
 #[derive(Debug)]
 struct Stack<T> {
@@ -31,7 +32,11 @@ impl<T> Stack<T> {
 		self.size += 1;
 	}
 	fn pop(&mut self) -> Option<T> {
-		// TODO
+		if self.size > 0 {
+			self.size -= 1;
+			return self.data.pop()
+		}
+
 		None
 	}
 	fn peek(&self) -> Option<&T> {
@@ -50,8 +55,8 @@ impl<T> Stack<T> {
 		IntoIter(self)
 	}
 	fn iter(&self) -> Iter<T> {
-		let mut iterator = Iter { 
-			stack: Vec::new() 
+		let mut iterator = Iter {
+			stack: Vec::new()
 		};
 		for item in self.data.iter() {
 			iterator.stack.push(item);
@@ -59,8 +64,8 @@ impl<T> Stack<T> {
 		iterator
 	}
 	fn iter_mut(&mut self) -> IterMut<T> {
-		let mut iterator = IterMut { 
-			stack: Vec::new() 
+		let mut iterator = IterMut {
+			stack: Vec::new()
 		};
 		for item in self.data.iter_mut() {
 			iterator.stack.push(item);
@@ -74,7 +79,7 @@ impl<T: Clone> Iterator for IntoIter<T> {
 	fn next(&mut self) -> Option<Self::Item> {
 		if !self.0.is_empty() {
 			self.0.size -= 1;self.0.data.pop()
-		} 
+		}
 		else {
 			None
 		}
@@ -101,14 +106,49 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 
 fn bracket_match(bracket: &str) -> bool
 {
-	//TODO
+	let mut stack = Stack::<char>::new();
+
+	for c in bracket.chars() {
+		match c {
+			'[' | '(' | '{' => stack.push(c),
+			']' => {
+				if stack.is_empty() || *stack.peek().unwrap() != '[' {
+					return false
+				}
+				stack.pop();
+			}
+
+			'}' => {
+				if stack.is_empty() || *stack.peek().unwrap() != '{' {
+					return false
+				}
+				stack.pop();
+			}
+
+			')' => {
+				if stack.is_empty() || *stack.peek().unwrap() != '(' {
+					return false
+				}
+				stack.pop();
+			}
+
+			_ => {
+				continue
+			}
+		}
+	}
+
+	if !stack.is_empty() {
+		return false
+	}
+
 	true
 }
 
 #[cfg(test)]
 mod tests {
 	use super::*;
-	
+
 	#[test]
 	fn bracket_matching_1(){
 		let s = "(2+3){func}[abc]";

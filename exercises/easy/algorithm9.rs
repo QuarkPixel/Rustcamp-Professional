@@ -7,6 +7,9 @@
 use std::cmp::Ord;
 use std::default::Default;
 
+fn main() {}
+
+
 pub struct Heap<T>
 where
     T: Default,
@@ -23,8 +26,29 @@ where
     pub fn new(comparator: fn(&T, &T) -> bool) -> Self {
         Self {
             count: 0,
-            items: vec![T::default()],
+            items: vec![],
             comparator,
+        }
+    }
+
+    pub fn heapify(&mut self, n: usize, i: usize) {
+        let mut largest = i;
+        let left = 2 * i + 1;
+        let right = 2 * i + 2;
+        let cmp = self.comparator;
+
+
+        if left < n && cmp(&self.items[left], &self.items[largest]) {
+            largest = left;
+        }
+
+        if right < n && cmp(&self.items[right], &self.items[largest]) {
+            largest = right
+        }
+
+        if largest != i {
+            self.items.swap(i, largest);
+            self.heapify(n, largest);
         }
     }
 
@@ -37,7 +61,14 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
+
+        if self.count > 1 {
+            for i in (0..=self.count / 2 - 1).rev() {
+                self.heapify(self.count, i);
+            }
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,7 +89,7 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        0
     }
 }
 
@@ -79,13 +110,22 @@ where
 
 impl<T> Iterator for Heap<T>
 where
-    T: Default,
+    T: Default + Copy,
 {
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.count == 0 {
+            return None;
+        }
+
+        let x = self.items[0].clone();
+        self.items.swap(0, self.count - 1);
+        self.count -= 1;
+        self.heapify(self.count, 0);
+        self.items.pop();
+
+        Some(x)
     }
 }
 

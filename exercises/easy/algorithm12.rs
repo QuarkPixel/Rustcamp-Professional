@@ -5,15 +5,23 @@
 
     You need to implement the function `is_palindrome(s: String) -> bool`.
     The function should return `true` if the string is a palindrome, and `false` otherwise.
-    
+
     Hint: Consider normalizing the string by converting it to lowercase and removing non-alphabetical characters before checking.
 */
 
 use std::fmt::{self, Display, Formatter};
 
+fn main() {}
+
 pub fn is_palindrome(s: String) -> bool {
-    // TODO: Implement the logic to check if the string is a palindrome
-    false // Placeholder return value
+    // 将字符串转换为小写，并过滤掉非字母字符
+    let filtered_chars: String = s.chars()
+        .filter(|c| c.is_ascii_alphabetic())
+        .map(|c| c.to_ascii_lowercase())
+        .collect();
+
+    // 判断处理后的字符串是否为回文
+    filtered_chars == filtered_chars.chars().rev().collect::<String>()
 }
 
 #[cfg(test)]

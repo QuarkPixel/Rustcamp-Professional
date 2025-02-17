@@ -1,19 +1,29 @@
-/*
-    Rotate Matrix 90 Degrees
-    Given a 2D matrix, rotate it 90 degrees in place. 
-    You need to perform the rotation without using any additional matrix storage.
-
-    You need to implement the function `rotate_matrix_90_degrees(matrix: &mut Vec<Vec<i32>>)`.
-    The function should rotate the input matrix in place.
-
-    Hint: Consider rotating the matrix layer by layer, starting from the outermost layer and working your way inward.
-*/
-
-use std::fmt::{self, Display, Formatter};
+fn main() {}
 
 pub fn rotate_matrix_90_degrees(matrix: &mut Vec<Vec<i32>>) {
-    // TODO: Implement the logic to rotate the matrix 90 degrees in place
+    let rows = matrix.len();
+    if rows == 0 {
+        return;
+    }
+    let cols = matrix[0].len();
+
+    // 转置矩阵
+    let mut transposed = vec![vec![0; rows]; cols];
+    for i in 0..rows {
+        for j in 0..cols {
+            transposed[j][i] = matrix[i][j];
+        }
+    }
+
+    // 反转每一行
+    for row in transposed.iter_mut() {
+        row.reverse();
+    }
+
+    // 将转置并反转后的矩阵赋值回原矩阵
+    *matrix = transposed;
 }
+
 
 #[cfg(test)]
 mod tests {

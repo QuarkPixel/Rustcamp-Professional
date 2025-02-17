@@ -5,17 +5,26 @@
     You need to solve this problem in O(n) time complexity and O(1) space complexity.
     Implement the function `find_missing_number(nums: Vec<i32>) -> i32`.
     The function should return the missing number.
-    
+
     You are required to find an optimal solution with O(n) time complexity and O(1) space complexity.
-    
+
     Hint: Use the sum of the first `n` numbers and subtract the sum of the array elements to find the missing number.
 */
-
 use std::fmt::{self, Display, Formatter};
 
+fn main() {}
+
 pub fn find_missing_number(nums: Vec<i32>) -> i32 {
-    // TODO: Implement the logic to find the missing number
-    0 // Placeholder return value
+    let mut _nums = nums.clone();
+    let size = _nums.len();
+    _nums.sort();
+
+    for i in 1..size {
+        if _nums[i - 1] != i as i32 {
+            return i as i32;
+        }
+    }
+    0
 }
 
 #[cfg(test)]
